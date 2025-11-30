@@ -1,0 +1,268 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+
+const openSourceTools = [
+  { name: 'MinIO', tier1: true, tier2: true, tier3: true, link: 'https://min.io/docs/minio/linux/reference/minio-server/minio-server.html#s3-api-compatibility' },
+  { name: 'Ceph (RGW)', tier1: true, tier2: true, tier3: true, link: 'https://docs.ceph.com/en/latest/radosgw/s3/' },
+  { name: 'Zenko (CloudServer)', tier1: true, tier2: true, tier3: true, link: 'https://github.com/scality/cloudserver' },
+  { name: 'Garage', tier1: true, tier2: true, tier3: 'partial', link: 'https://garagehq.deuxfleurs.fr/documentation/reference-manual/s3-compatibility/' },
+  { name: 'SeaweedFS', tier1: true, tier2: true, tier3: 'partial', link: 'https://github.com/seaweedfs/seaweedfs/wiki/Amazon-S3-API' },
+  { name: 'OpenStack Swift', tier1: true, tier2: true, tier3: 'partial', link: 'https://docs.openstack.org/swift/latest/s3_compat.html' },
+]
+
+const cloudServices = [
+  { name: 'AWS S3 (Reference)', tier1: true, tier2: true, tier3: true, link: 'https://aws.amazon.com/s3/' },
+  { name: 'Wasabi', tier1: true, tier2: true, tier3: true, link: 'https://wasabi.com/s3-compatible-cloud-storage/' },
+  { name: 'Cloudflare R2', tier1: true, tier2: true, tier3: 'partial', link: 'https://developers.cloudflare.com/r2/api/s3/api/' },
+  { name: 'Backblaze B2', tier1: true, tier2: true, tier3: 'partial', link: 'https://www.backblaze.com/docs/cloud-storage-s3-compatible-api' },
+  { name: 'DigitalOcean Spaces', tier1: true, tier2: true, tier3: 'partial', link: 'https://docs.digitalocean.com/products/spaces/reference/s3-compatibility/' },
+  { name: 'Scaleway Object Storage', tier1: true, tier2: true, tier3: 'partial', link: 'https://www.scaleway.com/en/docs/object-storage/api-cli/using-api-call-list/' },
+  { name: 'Google Cloud Storage', tier1: true, tier2: true, tier3: 'partial', link: 'https://cloud.google.com/storage/docs/interoperability' },
+  { name: 'Linode (Akamai)', tier1: true, tier2: true, tier3: 'partial', link: 'https://techdocs.akamai.com/cloud-computing/docs/object-storage-s3-api' },
+  { name: 'IDrive e2', tier1: true, tier2: true, tier3: 'partial', link: 'https://www.idrive.com/s3-storage-e2/guides/s3_developer_guide' },
+  { name: 'Tigris', tier1: true, tier2: true, tier3: 'partial', link: 'https://www.tigrisdata.com/docs/s3/' },
+  { name: 'Oracle Cloud (OCI)', tier1: true, tier2: true, tier3: 'partial', link: 'https://docs.oracle.com/en-us/iaas/Content/Object/Tasks/s3compatibleapi.htm' },
+  { name: 'IBM Cloud Object Storage', tier1: true, tier2: true, tier3: 'partial', link: 'https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-compatibility-api' },
+]
+---
+
+<Layout title="Introduction" activeSection="intro">
+  <div class="space-y-8">
+    <div>
+      <h1 class="text-4xl lg:text-4xl font-bold text-white mb-6">Storage is a commodity</h1>
+      <p class="text-xl text-slate-400 leading-relaxed font-light">
+        <span class="underline">S3-compatible</span> APIs have become the de-facto standard for digital storage.
+      </p>
+      <p class="text-lg text-slate-400 leading-relaxed pt-4 font-light">
+        Common Bucket is a community initiative to define the useful subset of the API 
+        that is broadly support to improve interoperability across cloud providers and open-source tools.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="p-6 rounded-xl bg-slate-900 border border-slate-800">
+        <h3 class="text-lg font-semibold text-white mb-2">Vendor Neutral</h3>
+        <p class="text-slate-400 text-sm">
+          Write code once. Run it on AWS, Cloudflare, MinIO, or your own server. 
+          No proprietary SDK wrappers required.
+        </p>
+      </div>
+      <div class="p-6 rounded-xl bg-slate-900 border border-slate-800">
+        <h3 class="text-lg font-semibold text-white mb-2">Predictable Specs</h3>
+        <p class="text-slate-400 text-sm">
+          A clearly defined subset of the 100+ S3 operations. If a tool claims "Common Bucket Compliant", 
+          you know exactly what works.
+        </p>
+      </div>
+    </div>
+
+    <div id="tiers">
+      <h2 class="text-2xl font-bold text-white mb-4 pt-20">Compatibility Tiers</h2>
+      <p class="text-slate-400">
+        Compliance is divided into 3 tiers. To be considered "S3 Compatible", a service must fully implement Tier 1.
+      </p>
+    </div>
+
+    <!-- Tier 1 -->
+    <div class="relative group">
+      <div class="absolute -inset-0.5 bg-linear-to-r from-emerald-500 to-cyan-500 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
+      <div class="relative bg-slate-950 rounded-xl border border-slate-800 p-8">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-bold text-white">Tier 1: The Core</h3>
+          <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20">MANDATORY</span>
+        </div>
+        <p class="text-slate-400 mb-6">
+          The absolute minimum required for a system to function as an object store. 
+          Enables basic CRUD operations. Most static site generators and simple backup tools only need this.
+        </p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          {['PutObject', 'GetObject', 'DeleteObject', 'HeadObject', 'ListObjectsV2', 'CreateBucket', 'DeleteBucket', 'HeadBucket'].map(op => (
+            <div class="bg-slate-900 p-2 rounded text-center text-sm font-mono text-slate-300 border border-slate-800">
+              {op}
+            </div>
+          ))}
+        </div>
+        
+        <!-- Code Block -->
+        <div class="my-4 rounded-lg overflow-hidden border border-slate-700 bg-slate-900/50 backdrop-blur">
+          <div class="flex items-center px-4 py-2 bg-slate-800/50 border-b border-slate-700">
+            <span class="text-xs font-mono text-slate-400">Example: List Objects (Tier 1)</span>
+          </div>
+          <pre class="p-4 overflow-x-auto text-sm font-mono text-slate-300"><code>GET /?list-type=2&prefix=photos/2023/ HTTP/1.1
+Host: my-bucket.s3.us-east-1.amazonaws.com
+Date: Mon, 21 Nov 2025 16:00:00 GMT
+Authorization: AWS4-HMAC-SHA256 ...</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier 2 -->
+    <div class="relative group">
+      <div class="absolute -inset-0.5 bg-linear-to-r from-blue-500 to-indigo-500 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
+      <div class="relative bg-slate-950 rounded-xl border border-slate-800 p-8">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-bold text-white">Tier 2: Reliability</h3>
+          <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-xs font-bold border border-blue-500/20">RECOMMENDED</span>
+        </div>
+        <p class="text-slate-400 mb-6">
+          Essential for production workloads handling files larger than 100MB. 
+          Ensures reliability over unstable networks via multipart uploads.
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {['CreateMultipartUpload', 'UploadPart', 'CompleteMultipartUpload', 'AbortMultipartUpload', 'ListParts'].map(op => (
+            <div class="bg-slate-900 p-2 rounded text-center text-sm font-mono text-slate-300 border border-slate-800">
+              {op}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Tier 3 -->
+    <div class="relative group">
+      <div class="absolute -inset-0.5 bg-linear-to-r from-purple-500 to-pink-500 rounded-2xl opacity-20 group-hover:opacity-40 transition duration-500 blur"></div>
+      <div class="relative bg-slate-950 rounded-xl border border-slate-800 p-8">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-bold text-white">Tier 3: Application Logic</h3>
+          <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-bold border border-purple-500/20">ADVANCED</span>
+        </div>
+        <p class="text-slate-400 mb-6">
+          Features required for complex application architectures, including presigned URLs for 
+          client-side uploads and custom metadata handling.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-900 p-3 rounded border border-slate-800">
+            <span class="font-mono text-purple-300 block mb-1">Presigned URLs</span>
+            <span class="text-xs text-slate-500">Must support v4 signature generation and consumption.</span>
+          </div>
+          <div class="bg-slate-900 p-3 rounded border border-slate-800">
+            <span class="font-mono text-purple-300 block mb-1">User Metadata</span>
+            <span class="text-xs text-slate-500">Handling of x-amz-meta-* headers.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="matrix">
+      <h1 class="text-3xl font-bold text-white mb-4 pt-20">Ecosystem Matrix</h1>
+      <p class="text-slate-400">
+        A living list of storage providers and open-source tools measured against the OpenS3 standard.
+      </p>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-bold text-white mb-4">Open Source Tools</h2>
+      <div class="overflow-x-auto rounded-xl border border-slate-800 shadow-2xl bg-slate-900/50">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-700 bg-slate-800/50">
+              <th class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Tool</th>
+              <th class="p-4 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">Tier 1</th>
+              <th class="p-4 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">Tier 2</th>
+              <th class="p-4 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">Tier 3</th>
+              <th class="p-4 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Docs</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {openSourceTools.map((provider) => (
+              <tr class="hover:bg-slate-800/50 transition-colors group">
+                <td class="p-4 font-medium text-white">{provider.name}</td>
+                <td class="p-4 text-center">
+                  <div class="flex justify-center">
+                    {provider.tier1 === true && <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                    {provider.tier1 === 'partial' && <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                    {!provider.tier1 && <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                  </div>
+                </td>
+                <td class="p-4 text-center">
+                  <div class="flex justify-center">
+                     {provider.tier2 === true && <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                     {provider.tier2 === 'partial' && <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                  </div>
+                </td>
+                <td class="p-4 text-center">
+                  <div class="flex justify-center">
+                     {provider.tier3 === true && <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                     {provider.tier3 === 'partial' && <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                  </div>
+                </td>
+                <td class="p-4 text-right">
+                  <a href={provider.link} target="_blank" rel="noreferrer" class="inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300">
+                    Specs 
+                    <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-bold text-white mb-4">Cloud Services</h2>
+      <div class="overflow-x-auto rounded-xl border border-slate-800 shadow-2xl bg-slate-900/50">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-700 bg-slate-800/50">
+              <th class="p-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Provider</th>
+              <th class="p-4 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">Tier 1</th>
+              <th class="p-4 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">Tier 2</th>
+              <th class="p-4 text-center text-xs font-medium text-slate-400 uppercase tracking-wider">Tier 3</th>
+              <th class="p-4 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">Docs</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            {cloudServices.map((provider) => (
+              <tr class="hover:bg-slate-800/50 transition-colors group">
+                <td class="p-4 font-medium text-white">{provider.name}</td>
+                <td class="p-4 text-center">
+                  <div class="flex justify-center">
+                    {provider.tier1 === true && <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                    {provider.tier1 === 'partial' && <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                    {!provider.tier1 && <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                  </div>
+                </td>
+                <td class="p-4 text-center">
+                  <div class="flex justify-center">
+                     {provider.tier2 === true && <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                     {provider.tier2 === 'partial' && <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                  </div>
+                </td>
+                <td class="p-4 text-center">
+                  <div class="flex justify-center">
+                     {provider.tier3 === true && <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                     {provider.tier3 === 'partial' && <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                  </div>
+                </td>
+                <td class="p-4 text-right">
+                  <a href={provider.link} target="_blank" rel="noreferrer" class="inline-flex items-center text-xs text-indigo-400 hover:text-indigo-300">
+                    Specs 
+                    <svg class="w-3 h-3 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-lg p-6 flex gap-4 items-start mt-8">
+      <svg class="w-6 h-6 text-amber-500 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div>
+        <h4 class="text-white font-bold mb-1">Compatibility Note</h4>
+        <p class="text-sm text-slate-400">
+          "Partial" support in Tier 3 often refers to inconsistencies in how providers handle 
+          <code class="text-amber-200 bg-amber-900/30 px-1 py-0.5 rounded mx-1 text-xs">CopyObject</code> 
+          directives or specific headers in Presigned URLs. Always reference the vendor documentation linked above.
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>

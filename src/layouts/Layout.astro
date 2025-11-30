@@ -1,0 +1,102 @@
+---
+import '../styles/global.css'
+const { title, activeSection } = Astro.props;
+
+const navItems = [
+  { id: 'intro', label: 'Introduction', href: '/', icon: 'book' },
+  // { id: 'spec', label: 'The Standard', href: '/standard', icon: 'shield' },
+  { id: 'tiers', label: 'Compatibility Tiers', href: '/#tiers', icon: 'server' },
+  { id: 'matrix', label: 'Ecosystem Matrix', href: '/#matrix', icon: 'database' },
+  { id: 'contribute', label: 'Contribute', href: '/contribute', icon: 'code' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en" class="bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} - OpenS3 Standard</title>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 h-16 border-b border-slate-800 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-between px-4 lg:px-8">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-indigo-500 rounded flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+      </div>
+      <span class="font-bold text-xl tracking-tight text-white">Common Bucket <span class="text-slate-500 font-normal">Standard</span></span>
+    </div>
+    
+    <div class="hidden lg:flex items-center gap-4">
+      <a href="" class="text-sm text-slate-400 hover:text-white transition-colors">GitHub</a>
+      <!-- <a href="#" class="text-sm text-slate-400 hover:text-white transition-colors">RFC Draft</a>
+      <button disabled class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-1.5 rounded-full text-sm font-medium transition-all">
+        Validate Endpoint
+      </button> -->
+    </div>
+
+    <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-400">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+    </button>
+  </header>
+
+  <div class="pt-16 flex max-w-7xl mx-auto w-full">
+    
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-slate-950 border-r border-slate-800 pt-20 transform transition-transform duration-200 ease-in-out z-40 -translate-x-full lg:translate-x-0">
+      <nav class="px-4 space-y-1">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            class={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all border ${
+              activeSection === item.id 
+                ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' 
+                : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200 border-transparent'
+            }`}
+          >
+            {/* Simple Icon Logic based on ID */}
+            {item.icon === 'book' && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>}
+            {item.icon === 'shield' && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>}
+            {item.icon === 'server' && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>}
+            {item.icon === 'database' && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>}
+            {item.icon === 'code' && <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>}
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="absolute bottom-8 left-4 right-4 p-4 bg-slate-900/50 rounded-xl border border-slate-800">
+        <p class="text-xs text-slate-500 mb-2">Version</p>
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-mono text-indigo-400">0.0.1</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 lg:ml-64 min-h-screen p-6 lg:p-12 max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <slot />
+    </main>
+
+  </div>
+
+  <script>
+    // Simple Mobile Menu Toggle
+    const btn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+    
+    btn.addEventListener('click', () => {
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+      }
+    });
+  </script>
+</body>
+</html>
